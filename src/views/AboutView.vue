@@ -16,7 +16,7 @@
 <script>
 import axios from 'axios';
 export default {
-  name: 'Rapor',
+  name: 'About',
   data() {
     return {
       posts: null,

@@ -10,5 +10,13 @@ export default defineConfig({
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
     }
+  },
+  devServer: {
+    proxy: {
+      '/api': {
+        target: 'https://www.linehaber.com.tr',
+        changeOrigin: true
+      }
+    }
   }
 })
