@@ -1,5 +1,11 @@
 <template>
   <div>
+    <form>
+      <label for="start-date">Start Date:</label>
+      <input type="date" id="start-date" v-model="startDate" @input="getAuthorsWithFilter"/>
+      <label for="end-date">End Date:</label>
+      <input type="date" id="end-date" v-model="endDate" @input="getAuthorsWithFilter"/>
+    </form>
     <table>
       <tr>
         <th>Author Name</th>
@@ -7,7 +13,7 @@
       </tr>
       <tr v-for="author in authors" :key="author.id">
         <td>{{ author.name }}</td>
-        <td>{{ author.postCount }}</td>
+        <td>{{ author.post_count }}</td>
       </tr>
     </table>
   </div>
@@ -15,54 +21,35 @@
 
 <script>
 import axios from 'axios';
+
 export default {
-  name: 'About',
+  name: 'Rapor',
   data() {
     return {
-      posts: null,
-      authors: [], // empty array
+      authors: [],
+      startDate: null,
+      endDate: null,
     };
   },
-  mounted() {
-    axios.get('//localhost:10004/wp-json/wp/v2/posts/?per_page=100')
-      .then(response => {
-        this.posts = response.data;
-        this.getAuthors();
-      });
-  },
   methods: {
-    getAuthors() {
+    getAuthorsWithFilter() {
       this.authors = []
-      let authorIds = this.posts.map(post => post.author);
-      authorIds = [...new Set(authorIds)]; // remove duplicates
-      authorIds.forEach(authorId => {
-        axios.get(`//localhost:10004/wp-json/wp/v2/users/${authorId}`)
-          .then(response => {
-            let author = {
-              id: authorId,
-              name: response.data.name,
-              postCount: 0,
-            };
-            this.posts.forEach(post => {
-              if (post.author === authorId) {
-                author.postCount++;
-              }
-            });
-            this.authors.push(author);
+      let start = this.startDate ? this.startDate + 'T00:00:00' : ''
+      let end = this.endDate ? this.endDate + 'T23:59:59' : ''
+      axios.get(`//localhost:10004/wp-json/wp/v2/users?per_page=100&before=${end}&after=${start}`)
+        .then(response => {
+          response.data.forEach(author => {
+            axios.get(`//localhost:10004/wp-json/wp/v2/posts?author=${author.id}&before=${end}&after=${start}`)
+              .then(res => {
+                author.post_count = res.headers['x-wp-total']
+                this.authors.push(author);
+              });
           });
-      });
-    }
-  }
+        });
+    },
+  },
+  mounted() {
+    this.getAuthorsWithFilter();
+  },
 };
 </script>
-
-
-<style>
-@media (min-width: 1024px) {
-  .about {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-  }
-}
-</style>
