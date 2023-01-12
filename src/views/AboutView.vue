@@ -24,7 +24,7 @@ export default {
     };
   },
   mounted() {
-    axios.get('https://www.linehaber.com.tr/wp-json/wp/v2/posts')
+    axios.get('//localhost:10004/wp-json/wp/v2/posts/?per_page=100')
       .then(response => {
         this.posts = response.data;
         this.getAuthors();
@@ -36,7 +36,7 @@ export default {
       let authorIds = this.posts.map(post => post.author);
       authorIds = [...new Set(authorIds)]; // remove duplicates
       authorIds.forEach(authorId => {
-        axios.get(`https://www.linehaber.com.tr/wp-json/wp/v2/users/${authorId}`)
+        axios.get(`//localhost:10004/wp-json/wp/v2/users/${authorId}`)
           .then(response => {
             let author = {
               id: authorId,
