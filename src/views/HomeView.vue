@@ -25,18 +25,18 @@ export default {
   },
   methods: {
     getAuthors(page = 1) {
-      axios.get(`//localhost:10004/wp-json/wp/v2/users?per_page=100&page=${page}`)
+      axios.get(`https://www.linehaber.com.tr/wp-json/wp/v2/users?per_page=100&page=${page}`)
         .then(response => {
           response.data.forEach(author => {
-            axios.get(`//localhost:10004/wp-json/wp/v2/posts?author=${author.id}`)
-            .then(res => {
+            axios.get(`https://www.linehaber.com.tr/wp-json/wp/v2/posts?author=${author.id}`)
+              .then(res => {
                 author.post_count = res.headers['x-wp-total']
                 this.authors.push(author);
-            });
+              });
           });
           if (response.headers.link && /page=(\d+)/.exec(response.headers.link)) {
-              let nextPage = /page=(\d+)/.exec(response.headers.link)[1];
-              this.getAuthors(nextPage);
+            let nextPage = /page=(\d+)/.exec(response.headers.link)[1];
+            this.getAuthors(nextPage);
           }
           else {
             // Do something if response headers do not contain the link
