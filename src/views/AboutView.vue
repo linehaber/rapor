@@ -36,10 +36,10 @@ export default {
       this.authors = []
       let start = this.startDate ? this.startDate + 'T00:00:00' : ''
       let end = this.endDate ? this.endDate + 'T23:59:59' : ''
-      axios.get(`https://linehaber.com.tr/wp-json/wp/v2/users?per_page=100&before=${end}&after=${start}`)
+      axios.get(`https://www.linehaber.com.tr/wp-json/wp/v2/users?per_page=100&before=${end}&after=${start}`)
         .then(response => {
           response.data.forEach(author => {
-            axios.get(`https://linehaber.com.tr/wp-json/wp/v2/posts?author=${author.id}&before=${end}&after=${start}`)
+            axios.get(`https://www.linehaber.com.tr/wp-json/wp/v2/posts?author=${author.id}&before=${end}&after=${start}`)
               .then(res => {
                 author.post_count = res.headers['x-wp-total']
                 this.authors.push(author);
