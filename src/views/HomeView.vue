@@ -34,9 +34,9 @@ export default {
                 this.authors.push(author);
             });
           });
-          if (response.headers.link) {
-            let nextPage = /page=(\d+)/.exec(response.headers.link)[1];
-            this.getAuthors(nextPage);
+          if (response.headers.link && /page=(\d+)/.exec(response.headers.link)) {
+              let nextPage = /page=(\d+)/.exec(response.headers.link)[1];
+              this.getAuthors(nextPage);
           }
           else {
             // Do something if response headers do not contain the link
