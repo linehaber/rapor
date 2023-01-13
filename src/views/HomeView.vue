@@ -38,6 +38,10 @@ export default {
             let nextPage = /page=(\d+)/.exec(response.headers.link)[1];
             this.getAuthors(nextPage);
           }
+          else {
+            // Do something if response headers do not contain the link
+            console.log("Link header not found in the response")
+          }
         });
     },
   },
