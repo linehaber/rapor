@@ -25,10 +25,17 @@ export default {
   },
   methods: {
     getAuthors(page = 1) {
+<<<<<<< HEAD
       axios.get(`https://arsiv.linehaber.com.tr/wp-json/wp/v2/users?per_page=100&page=${page}`)
         .then(response => {
           response.data.forEach(author => {
             axios.get(`https://arsiv.linehaber.com.tr/wp-json/wp/v2/posts?author=${author.id}`)
+=======
+      axios.get(`http://localhost/linegpt/wp-json/wp/v2/users?per_page=100&page=${page}`)
+        .then(response => {
+          response.data.forEach(author => {
+            axios.get(`http://localhost/linegpt/wp-json/wp/v2/posts?author=${author.id}`)
+>>>>>>> a92bc896de13bbbcc844406f34a895dd7f717ece
               .then(res => {
                 author.post_count = res.headers['x-wp-total']
                 this.authors.push(author);
